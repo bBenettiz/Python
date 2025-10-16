@@ -1,10 +1,21 @@
-import datetime
+from datetime import datetime
+from airflow import DAG
+from airflow.operators.empty import EmptyOperator
 
- from airflow.sdk import DAG
- from airflow.providers.standard.operators.empty import EmptyOperator
+# Definição do DAG
+with DAG(
+    dag_id="benetti_dag_test",
+    start_date=datetime(2021, 1, 1),
+    schedule="@daily",
+    catchup=False,
+    tags=["teste", "benetti"],
+) as dag:
+    
+    # Tarefa inicial
+    start = EmptyOperator(task_id="inicio")
 
- with DAG(
-     dag_id="my_dag_name",
-     start_date=datetime.datetime(2021, 1, 1),
-     schedule="@daily",
- ):
+    # Tarefa final
+    end = EmptyOperator(task_id="fim")
+
+    # Dependência
+    start >> end
